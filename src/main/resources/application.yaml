@@ -1,0 +1,41 @@
+spring:
+  main:
+    banner-mode: OFF
+  codec:
+    max-in-memory-size: 2MB
+  sleuth:
+    propagation-keys:
+      - Nav-Callid
+      - Nav-Consumer-Id
+    log:
+      slf4j:
+        whitelisted-mdc-keys:
+          - Nav-Callid
+          - Nav-Consumer-Id
+
+server:
+  port: 7076
+  error:
+    whitelabel:
+      enabled: false
+
+management:
+  endpoint:
+    health:
+      show-details: always
+  endpoints.web:
+    exposure:
+      include: info, health, metrics, prometheus
+    base-path: "/internal"
+  metrics:
+    export:
+      prometheus:
+        enabled: true
+    tags:
+      application: ${spring.application.name}
+
+KAFKA_GROUP_ID: TODO
+KAFKA_TOPIC: TODO
+
+navCallId: Nav-Callid
+navConsumerId: Nav-Consumer-Id
