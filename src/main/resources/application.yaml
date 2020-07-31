@@ -34,8 +34,8 @@ management:
     tags:
       application: ${spring.application.name}
 
-KAFKA_GROUP_ID: TODO
-KAFKA_TOPIC: TODO
+KAFKA_GROUP_ID: klage-joark-listener
+KAFKA_TOPIC: aapen-dok-journalfoering-v1
 
 navCallId: Nav-Callid
 navConsumerId: Nav-Consumer-Id
