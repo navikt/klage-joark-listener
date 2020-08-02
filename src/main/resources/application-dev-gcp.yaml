@@ -3,3 +3,7 @@ SECURITY_TOKEN_SERVICE_REST_URL: https://api-gw-q1.oera.no/security-token-servic
 SERVICE_USER_USERNAME: srvklage-dittnav
 JOARK_SERVICE_URL: https://api-gw-q1.oera.no/dokarkiv/rest/journalpostapi/v1/journalpost
 KAFKA_TOPIC: aapen-dok-journalfoering-v1-q1
+VARSEL_URI: mq://b27apvl176.preprod.local:1413/MQ1LSC02
+VARSEL_CHANNEL_NAME: Q1_KLAGE_VARSEL
+VARSEL_QUEUE_NAME: QA.Q1_VARSELPRODUKSJON.SEND_VARSEL
+VARSEL_USERNAME: srvappserver
