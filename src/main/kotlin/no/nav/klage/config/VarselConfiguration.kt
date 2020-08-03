@@ -12,11 +12,10 @@ import org.springframework.jms.connection.UserCredentialsConnectionFactoryAdapte
 import org.springframework.jms.core.JmsTemplate
 import org.springframework.jms.support.destination.DynamicDestinationResolver
 import java.net.URI
-import javax.jms.ConnectionFactory
 
 @Configuration
 class VarselConfiguration {
-    private val UTF_8_WITH_PUA = 1208
+    private val utf8WithPua = 1208
 
     @Value("\${VARSEL_URI}")
     private lateinit var uri: URI
@@ -31,32 +30,24 @@ class VarselConfiguration {
     private lateinit var username: String
 
     @Bean
-    fun varselJmsTemplate(jmsConnectionFactory: ConnectionFactory): JmsTemplate {
-        val jmsTemplate = JmsTemplate(jmsConnectionFactory)
-        jmsTemplate.defaultDestinationName = queueName
-        jmsTemplate.destinationResolver = DynamicDestinationResolver()
-        return jmsTemplate
+    fun varselJmsTemplate() = JmsTemplate(jmsConnectionFactory()).apply {
+        defaultDestinationName = queueName
+        destinationResolver = DynamicDestinationResolver()
     }
 
-    @Bean
-    fun jmsConnectionFactory(): ConnectionFactory {
-        val cf = UserCredentialsConnectionFactoryAdapter()
-        cf.setUsername(username)
-        cf.setTargetConnectionFactory(targetConnectionFactory())
-        return cf
+    private fun jmsConnectionFactory() = UserCredentialsConnectionFactoryAdapter().apply {
+        setUsername(username)
+        setTargetConnectionFactory(targetConnectionFactory())
     }
 
-    private fun targetConnectionFactory(): ConnectionFactory {
-        val cf = MQQueueConnectionFactory()
-        cf.hostName = uri.host
-        cf.port = uri.port
-        cf.queueManager = uri.path
-        cf.channel = channelName
-        cf.transportType = WMQ_CM_CLIENT
-        cf.ccsid = UTF_8_WITH_PUA
-        cf.setIntProperty(JMS_IBM_ENCODING, MQENC_NATIVE)
-        cf.setIntProperty(JMS_IBM_CHARACTER_SET, UTF_8_WITH_PUA)
-        return cf
+    private fun targetConnectionFactory() = MQQueueConnectionFactory().apply {
+        hostName = uri.host
+        port = uri.port
+        queueManager = uri.path
+        channel = channelName
+        transportType = WMQ_CM_CLIENT
+        ccsid = utf8WithPua
+        setIntProperty(JMS_IBM_ENCODING, MQENC_NATIVE)
+        setIntProperty(JMS_IBM_CHARACTER_SET, utf8WithPua)
     }
-
 }

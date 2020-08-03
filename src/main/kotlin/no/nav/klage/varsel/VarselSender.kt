@@ -8,6 +8,6 @@ class VarselSender(
     private val varselXmlGenerator: VarselXmlGenerator
 ) {
     fun send(varsel: Varsel) {
-        varselConnection.sendVarsel(varselXmlGenerator.generateXML(varsel))
+        varselConnection.sendVarsel(varsel.callId, varselXmlGenerator.generateXML(varsel))
     }
 }
