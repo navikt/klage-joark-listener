@@ -2,6 +2,7 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 val logstashVersion = "5.1"
 val springSleuthVersion = "2.2.3.RELEASE"
+val mqVersion = "9.2.0.0"
 
 repositories {
     mavenCentral()
@@ -32,6 +33,10 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     implementation("org.springframework.kafka:spring-kafka")
+
+    implementation("javax.jms:javax.jms-api")
+    implementation("org.springframework:spring-jms")
+    implementation("com.ibm.mq:com.ibm.mq.allclient:$mqVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "org.junit.vintage")
