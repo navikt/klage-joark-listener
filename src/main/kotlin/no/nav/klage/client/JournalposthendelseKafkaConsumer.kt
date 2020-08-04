@@ -1,5 +1,6 @@
 package no.nav.klage.client
 
+import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.klage.getLogger
 import no.nav.klage.varsel.VarselSender
 import org.apache.kafka.clients.consumer.ConsumerRecord
@@ -17,8 +18,30 @@ class JournalposthendelseKafkaConsumer(
     }
 
     @KafkaListener(topics = ["\${KAFKA_TOPIC}"])
-    fun listen(consumerRecord: ConsumerRecord<String, String>) {
+    fun listen(consumerRecord: ConsumerRecord<String, JournalfoeringHendelseRecord>) {
         logger.debug("Journalposthendelse received from Kafka topic: {}", consumerRecord)
+        logger.debug("Value of event. " +
+                "\nmottaksKanal: {}" +
+                "\nbehandlingstema: {}" +
+                "\njournalpostId: {}" +
+                "\njournalpostStatus: {}" +
+                "\nhendelsesId: {}" +
+                "\nhendelsesType: {}" +
+                "\ntemaGammelt: {}" +
+                "\ntemaNytt: {}" +
+                "\nversjon: {}" +
+                "\nkanalReferanseId: {}",
+            consumerRecord.value().mottaksKanal,
+            consumerRecord.value().behandlingstema,
+            consumerRecord.value().journalpostId,
+            consumerRecord.value().journalpostStatus,
+            consumerRecord.value().hendelsesId,
+            consumerRecord.value().hendelsesType,
+            consumerRecord.value().temaGammelt,
+            consumerRecord.value().temaNytt,
+            consumerRecord.value().versjon,
+            consumerRecord.value().kanalReferanseId
+        )
         // TODO Send varsel
     }
 
