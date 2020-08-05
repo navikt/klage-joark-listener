@@ -1,6 +1,6 @@
 package no.nav.klage.client
 
-import no.nav.klage.domain.JoarkStatus
+import no.nav.klage.domain.JournalpostStatus
 import no.nav.klage.getLogger
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
@@ -17,14 +17,14 @@ class KlageDittnavAPIClient(
         private val logger = getLogger(javaClass.enclosingClass)
     }
 
-    fun sendJoarkStatusToKlage(journalpostId: String, joarkStatus: JoarkStatus) {
-        logger.debug("Sending Joark status to klage-dittnav-api. JournalpostId: {}", journalpostId)
+    fun sendJournalpostStatusToKlage(journalpostId: String, journalpostStatus: JournalpostStatus) {
+        logger.debug("Sending Journalpost status to klage-dittnav-api. JournalpostId: {}", journalpostId)
         klageDittnavAPIWebClient.post()
-                .uri("/joarkstatus/$journalpostId")
+                .uri("/journalpoststatus/$journalpostId")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${azureADClient.oidcToken()}")
-                .bodyValue(joarkStatus)
+                .bodyValue(journalpostId)
                 .retrieve()
                 .toBodilessEntity()
-                .block() ?: throw RuntimeException("Unable to send Joark status for klage in klage-dittnav-api.")
+                .block() ?: throw RuntimeException("Unable to send Journalpost status for klage in klage-dittnav-api.")
     }
 }
