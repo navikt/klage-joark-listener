@@ -50,7 +50,7 @@ class KafkaConfiguration {
         props[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = true
         props[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaAvroDeserializer::class.java
-        props[AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG] = "http://localhost:8081"
+        props[AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG] = "https://kafka-schema-registry.nais-q.adeo.no"
         props[SaslConfigs.SASL_JAAS_CONFIG] =
             "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";"
         props[SaslConfigs.SASL_MECHANISM] = "PLAIN"
