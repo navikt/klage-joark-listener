@@ -1,7 +1,7 @@
 package no.nav.klage.config
 
 import no.nav.klage.client.OidcDiscoveryClient
-import no.nav.klage.getLogger
+import no.nav.klage.util.getLogger
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.client.WebClient

@@ -1,7 +1,7 @@
 package no.nav.klage.client
 
 import no.nav.klage.domain.JournalpostStatus
-import no.nav.klage.getLogger
+import no.nav.klage.util.getLogger
 import org.springframework.http.HttpHeaders
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
