@@ -1,14 +1,16 @@
 package no.nav.klage.client
 
+import brave.Tracer
 import com.fasterxml.jackson.annotation.JsonProperty
 import no.nav.klage.util.getLogger
+import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.web.reactive.function.client.WebClient
 import org.springframework.web.reactive.function.client.bodyToMono
 import java.time.LocalDateTime
 
 @Component
-class StsClient(private val stsWebClient: WebClient) {
+class StsClient(private val stsWebClient: WebClient, private val tracer: Tracer) {
 
     private var cachedOidcToken: Token? = null
 
@@ -16,6 +18,9 @@ class StsClient(private val stsWebClient: WebClient) {
         @Suppress("JAVA_CLASS_ON_COMPANION")
         private val logger = getLogger(javaClass.enclosingClass)
     }
+
+    @Value("\${navCallId}")
+    lateinit var navCallId: String
 
     fun oidcToken(): String {
         if (cachedOidcToken.shouldBeRenewed()) {
@@ -27,6 +32,7 @@ class StsClient(private val stsWebClient: WebClient) {
                         .queryParam("scope", "openid")
                         .build()
                 }
+                .header(navCallId, tracer.currentSpan().context().traceIdString())
                 .retrieve()
                 .bodyToMono<Token>()
                 .block()

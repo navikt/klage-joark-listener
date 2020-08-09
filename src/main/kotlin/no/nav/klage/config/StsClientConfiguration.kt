@@ -22,6 +22,12 @@ class StsClientConfiguration(private val webClientBuilder: WebClient.Builder) {
     @Value("\${STS_APIKEY}")
     private lateinit var apiKey: String
 
+    @Value("\${navConsumerId}")
+    lateinit var navConsumerId: String
+
+    @Value("\${spring.application.name}")
+    lateinit var appName: String
+
     @Value("\${xNavApiKey}")
     private lateinit var xNavApiKey: String
 
@@ -30,6 +36,7 @@ class StsClientConfiguration(private val webClientBuilder: WebClient.Builder) {
         return webClientBuilder
             .baseUrl("$stsUrl/rest/v1/sts/token")
             .defaultHeader(HttpHeaders.AUTHORIZATION, "Basic ${credentials()}")
+            .defaultHeader(navConsumerId, appName)
             .defaultHeader(xNavApiKey, apiKey)
             .build()
     }
