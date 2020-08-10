@@ -13,8 +13,8 @@ import reactor.netty.tcp.ProxyProvider
 
 @Configuration
 class AzureADClientConfiguration(
-        private val webClientBuilder: WebClient.Builder,
-        private val oidcDiscoveryClient: OidcDiscoveryClient
+    private val webClientBuilder: WebClient.Builder,
+    private val oidcDiscoveryClient: OidcDiscoveryClient
 ) {
 
     companion object {
@@ -27,6 +27,7 @@ class AzureADClientConfiguration(
 
     @Bean
     fun azureADWebClient(): WebClient {
+        logger.debug("Setting up ad client. ProxyUrl: {}", proxyUrl)
         val httpClient: HttpClient = HttpClient.create()
             .tcpConfiguration { tcpClient ->
                 tcpClient.proxy { proxy ->
@@ -35,8 +36,8 @@ class AzureADClientConfiguration(
             }
         val connector = ReactorClientHttpConnector(httpClient)
         return webClientBuilder
-                .baseUrl(oidcDiscoveryClient.oidcDiscovery().token_endpoint)
-                .clientConnector(connector)
-                .build()
+            .clientConnector(connector)
+            .baseUrl(oidcDiscoveryClient.oidcDiscovery().token_endpoint)
+            .build()
     }
 }
