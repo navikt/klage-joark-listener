@@ -1,6 +1,6 @@
 package no.nav.klage.varsel
 
-import no.nav.klage.getLogger
+import no.nav.klage.util.getLogger
 import org.springframework.jms.core.JmsTemplate
 import org.springframework.stereotype.Component
 

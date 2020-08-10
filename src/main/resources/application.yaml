@@ -39,3 +39,6 @@ KAFKA_TOPIC: aapen-dok-journalfoering-v1
 
 navCallId: Nav-Callid
 navConsumerId: Nav-Consumer-Id
+xNavApiKey: x-nav-apiKey
+
+KLAGE-DITTNAV-API_SERVICE_URL: http://klage-dittnav-api
