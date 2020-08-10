@@ -1,7 +1,7 @@
 package no.nav.klage.client
 
 import no.nav.klage.domain.OidcToken
-import no.nav.klage.getLogger
+import no.nav.klage.util.getLogger
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.stereotype.Component
 import org.springframework.util.LinkedMultiValueMap

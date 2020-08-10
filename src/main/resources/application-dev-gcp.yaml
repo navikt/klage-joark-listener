@@ -1,7 +1,7 @@
 KAFKA_BOOTSTRAP_SERVERS: b27apvl00045.preprod.local:8443,b27apvl00046.preprod.local:8443,b27apvl00047.preprod.local:8443
 SECURITY_TOKEN_SERVICE_REST_URL: https://api-gw-q1.oera.no/security-token-service
 SERVICE_USER_USERNAME: srvklage-dittnav
-JOARK_SERVICE_URL: https://api-gw-q1.oera.no/dokarkiv/rest/journalpostapi/v1/journalpost
+SAF_BASE_URL: https://api-gw-q1.oera.no/saf-api/graphql
 KAFKA_TOPIC: aapen-dok-journalfoering-v1-q1
 VARSEL_URI: mq://b27apvl176.preprod.local:1413/MQ1LSC02
 VARSEL_CHANNEL_NAME: Q1_KLAGE_VARSEL
