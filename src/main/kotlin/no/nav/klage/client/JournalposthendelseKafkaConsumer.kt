@@ -1,7 +1,7 @@
 package no.nav.klage.client
 
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
-import no.nav.klage.getLogger
+import no.nav.klage.util.getLogger
 import no.nav.klage.varsel.VarselSender
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
