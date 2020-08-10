@@ -31,7 +31,7 @@ class AzureADClientConfiguration(
         val httpClient: HttpClient = HttpClient.create()
             .tcpConfiguration { tcpClient ->
                 tcpClient.proxy { proxy ->
-                    proxy.type(ProxyProvider.Proxy.HTTP).host(proxyUrl).port(443)
+                    proxy.type(ProxyProvider.Proxy.HTTP).host("webproxy.nais").port(8088)
                 }
             }
         val connector = ReactorClientHttpConnector(httpClient)
