@@ -22,7 +22,7 @@ class AzureADClientConfiguration(
         private val logger = getLogger(javaClass.enclosingClass)
     }
 
-    @Value("\${HTTP_PROXY}")
+    @Value("\${HTTPS_PROXY}")
     private lateinit var proxyUrl: String
 
     @Bean
