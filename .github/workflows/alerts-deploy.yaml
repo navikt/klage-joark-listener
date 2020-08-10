@@ -19,13 +19,13 @@ jobs:
         uses: nais/deploy/actions/deploy@master
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_API_KEY }}
-          CLUSTER: dev-gcp
+          CLUSTER: dev-fss
           RESOURCE: deploy/alerts.yaml
           VARS: deploy/alerts-dev.yaml
       - name: deploy to prod
         uses: nais/deploy/actions/deploy@master
         env:
           APIKEY: ${{ secrets.NAIS_DEPLOY_API_KEY }}
-          CLUSTER: prod-gcp
+          CLUSTER: prod-fss
           RESOURCE: deploy/alerts.yaml
           VARS: deploy/alerts-prod.yaml

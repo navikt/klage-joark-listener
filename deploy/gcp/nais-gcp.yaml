@@ -35,16 +35,21 @@ spec:
   prometheus:
     enabled: true
     path: /internal/prometheus
-  vault:
-    enabled: true
-    paths:
-      - mountPath: /var/run/secrets/nais.io/vault
-        kvPath: /kv/prod/fss/klage/default
-      - mountPath: /var/run/secrets/nais.io/azure
-        kvPath: /azuread/data/prod/creds/klage
   secureLogs:
     enabled: true
   webproxy: true
+  accessPolicy:
+    outbound:
+      rules:
+        - application: klage-dittnav-api
+      external:
+      {{#each externalHosts as |host|}}
+        - host: {{host}}
+      {{/each}}
+  envFrom:
+    - secret: srvklage-dittnav
+    - secret: sts-apikey
+    - secret: saf-apikey
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: {{springProfile}}
