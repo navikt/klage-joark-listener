@@ -1,6 +1,5 @@
 package no.nav.klage.config
 
-import no.nav.klage.client.OidcDiscoveryClient
 import no.nav.klage.util.getLogger
 import no.nav.klage.util.getReactorClientHttpConnector
 import org.springframework.beans.factory.annotation.Value
