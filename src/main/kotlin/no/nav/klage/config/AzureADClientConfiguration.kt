@@ -11,8 +11,7 @@ import org.springframework.web.reactive.function.client.WebClient
 
 @Configuration
 class AzureADClientConfiguration(
-        private val webClientBuilder: WebClient.Builder,
-        private val oidcDiscoveryClient: OidcDiscoveryClient
+        private val webClientBuilder: WebClient.Builder
 ) {
 
     companion object {
@@ -27,7 +26,6 @@ class AzureADClientConfiguration(
     fun azureADWebClient(): WebClient {
         return webClientBuilder
                 .clientConnector(getReactorClientHttpConnector(proxyUrl))
-                .baseUrl(oidcDiscoveryClient.oidcDiscovery().token_endpoint)
                 .build()
     }
 }
