@@ -40,6 +40,8 @@ spec:
   webproxy: true
   envFrom:
     - secret: srvklage-dittnav
+    - secret: sts-apikey
+    - secret: saf-apikey
   env:
     - name: SPRING_PROFILES_ACTIVE
       value: {{springProfile}}
