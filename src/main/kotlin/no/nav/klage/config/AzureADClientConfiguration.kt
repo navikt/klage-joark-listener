@@ -2,19 +2,17 @@ package no.nav.klage.config
 
 import no.nav.klage.client.OidcDiscoveryClient
 import no.nav.klage.util.getLogger
+import no.nav.klage.util.getReactorClientHttpConnector
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
-import org.springframework.http.client.reactive.ReactorClientHttpConnector
 import org.springframework.web.reactive.function.client.WebClient
-import reactor.netty.http.client.HttpClient
-import reactor.netty.tcp.ProxyProvider
 
 
 @Configuration
 class AzureADClientConfiguration(
-    private val webClientBuilder: WebClient.Builder,
-    private val oidcDiscoveryClient: OidcDiscoveryClient
+        private val webClientBuilder: WebClient.Builder,
+        private val oidcDiscoveryClient: OidcDiscoveryClient
 ) {
 
     companion object {
@@ -27,17 +25,9 @@ class AzureADClientConfiguration(
 
     @Bean
     fun azureADWebClient(): WebClient {
-        logger.debug("Setting up ad client. ProxyUrl: {}", proxyUrl)
-        val httpClient: HttpClient = HttpClient.create()
-            .tcpConfiguration { tcpClient ->
-                tcpClient.proxy { proxy ->
-                    proxy.type(ProxyProvider.Proxy.HTTP).host("webproxy.nais").port(8088)
-                }
-            }
-        val connector = ReactorClientHttpConnector(httpClient)
         return webClientBuilder
-            .clientConnector(connector)
-            .baseUrl(oidcDiscoveryClient.oidcDiscovery().token_endpoint)
-            .build()
+                .clientConnector(getReactorClientHttpConnector(proxyUrl))
+                .baseUrl(oidcDiscoveryClient.oidcDiscovery().token_endpoint)
+                .build()
     }
 }

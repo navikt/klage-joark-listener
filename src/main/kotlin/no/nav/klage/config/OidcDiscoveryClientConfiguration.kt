@@ -1,10 +1,12 @@
 package no.nav.klage.config
 
 import no.nav.klage.util.getLogger
+import no.nav.klage.util.getReactorClientHttpConnector
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.context.annotation.Bean
 import org.springframework.context.annotation.Configuration
 import org.springframework.web.reactive.function.client.WebClient
+
 
 @Configuration
 class OidcDiscoveryClientConfiguration(private val webClientBuilder: WebClient.Builder) {
@@ -17,9 +19,13 @@ class OidcDiscoveryClientConfiguration(private val webClientBuilder: WebClient.B
     @Value("\${AZURE_APP_WELL_KNOWN_URL}")
     private lateinit var discoveryUrl: String
 
+    @Value("\${HTTPS_PROXY}")
+    private lateinit var proxyUrl: String
+
     @Bean
     fun oidcDiscoveryWebClient(): WebClient {
         return webClientBuilder
+                .clientConnector(getReactorClientHttpConnector(proxyUrl))
                 .baseUrl(discoveryUrl)
                 .build()
     }
