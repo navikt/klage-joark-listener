@@ -7,6 +7,9 @@ val mqVersion = "9.2.0.0"
 repositories {
     mavenCentral()
     jcenter()
+    maven {
+        url = uri("http://packages.confluent.io/maven/")
+    }
 }
 
 plugins {
@@ -33,6 +36,9 @@ dependencies {
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
 
     implementation("org.springframework.kafka:spring-kafka")
+    implementation("io.confluent:kafka-avro-serializer:5.5.1")
+    implementation("org.apache.avro:avro:1.10.0")
+
 
     implementation("javax.jms:javax.jms-api")
     implementation("org.springframework:spring-jms")
@@ -63,6 +69,7 @@ tasks.test {
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("src/main/kotlin")
+kotlin.sourceSets["main"].kotlin.srcDirs("src/main/java")
 kotlin.sourceSets["test"].kotlin.srcDirs("src/test/kotlin")
 
 sourceSets["main"].resources.srcDirs("src/main/resources")
