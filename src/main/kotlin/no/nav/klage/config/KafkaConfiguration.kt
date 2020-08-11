@@ -26,6 +26,9 @@ class KafkaConfiguration {
     @Value("\${KAFKA_GROUP_ID}")
     private lateinit var groupId: String
 
+    @Value("\${KAFKA_SCHEMA_REGISTRY}")
+    private lateinit var schemaRegistry: String
+
     @Value("\${SERVICE_USER_USERNAME}")
     private lateinit var username: String
 
@@ -51,7 +54,7 @@ class KafkaConfiguration {
         props[ConsumerConfig.ENABLE_AUTO_COMMIT_CONFIG] = true
         props[ConsumerConfig.KEY_DESERIALIZER_CLASS_CONFIG] = StringDeserializer::class.java
         props[ConsumerConfig.VALUE_DESERIALIZER_CLASS_CONFIG] = KafkaAvroDeserializer::class.java
-        props[AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG] = "https://kafka-schema-registry.nais-q.adeo.no"
+        props[AbstractKafkaSchemaSerDeConfig.SCHEMA_REGISTRY_URL_CONFIG] = schemaRegistry
         props[KafkaAvroDeserializerConfig.SPECIFIC_AVRO_READER_CONFIG] = true
         props[SaslConfigs.SASL_JAAS_CONFIG] =
             "org.apache.kafka.common.security.plain.PlainLoginModule required username=\"$username\" password=\"$password\";"
