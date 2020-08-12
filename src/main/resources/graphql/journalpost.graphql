@@ -1,52 +1,50 @@
-query {
-    journalpost($journalpostId: String!) {
-        journalpostId
-        tittel
-        journalposttype
-        journalstatus
-        tema
-        temanavn
-        behandlingstema
-        behandlingstemanavn
-        avsenderMottakerNavn
-        avsenderMottakerLand
-        journalforendeEnhet
-        journalfortAvNavn
-        opprettetAvNavn
-        kanal
-        kanalnavn
+query journalpost($journalpostId: String!) {
+    journalpostId
+    tittel
+    journalposttype
+    journalstatus
+    tema
+    temanavn
+    behandlingstema
+    behandlingstemanavn
+    avsenderMottakerNavn
+    avsenderMottakerLand
+    journalforendeEnhet
+    journalfortAvNavn
+    opprettetAvNavn
+    kanal
+    kanalnavn
+    datoOpprettet
+    relevanteDatoer {
+        dato
+        datotype
+    }
+    tilleggsopplysninger {
+        nokkel
+        verdi
+    }
+    sak {
+        arkivsaksnummer
+        arkivsaksystem
         datoOpprettet
-        relevanteDatoer {
-            dato
-            datotype
-        }
-        tilleggsopplysninger {
-            nokkel
-            verdi
-        }
-        sak {
-            arkivsaksnummer
-            arkivsaksystem
-            datoOpprettet
-            fagsakId
-            fagsaksystem
-        }
-        bruker {
-            id
-            type
-        }
-        dokumenter {
-            dokumentInfoId
+        fagsakId
+        fagsaksystem
+    }
+    bruker {
+        id
+        type
+    }
+    dokumenter {
+        dokumentInfoId
+        tittel
+        brevkode
+        dokumentstatus
+        logiskeVedlegg {
             tittel
-            brevkode
-            dokumentstatus
-            logiskeVedlegg {
-                tittel
-            }
-            dokumentvarianter {
-                variantformat
-                saksbehandlerHarTilgang
-            }
+        }
+        dokumentvarianter {
+            variantformat
+            saksbehandlerHarTilgang
         }
     }
 }
