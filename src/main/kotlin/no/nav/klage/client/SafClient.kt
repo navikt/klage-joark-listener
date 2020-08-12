@@ -2,7 +2,6 @@ package no.nav.klage.client
 
 import brave.Tracer
 import no.nav.klage.domain.saf.JournalpostQuery
-import no.nav.klage.domain.saf.JournalpostQueryResponse
 import no.nav.klage.domain.saf.JournalpostQueryVariables
 import org.springframework.beans.factory.annotation.Value
 import org.springframework.http.HttpHeaders
@@ -20,13 +19,13 @@ class SafClient(
     @Value("\${navCallId}")
     lateinit var navCallId: String
 
-    fun getJournalpost(journalpostId: String): JournalpostQueryResponse {
+    fun getJournalpost(journalpostId: String): String {
         return safWebClient.post()
             .header(HttpHeaders.AUTHORIZATION, "Bearer ${stsClient.oidcToken()}")
             .header(navCallId, tracer.currentSpan().context().traceIdString())
             .bodyValue(journalpostQuery(journalpostId))
             .retrieve()
-            .bodyToMono<JournalpostQueryResponse>()
+            .bodyToMono<String>()
             .block() ?: throw RuntimeException("Journalpost with id $journalpostId could not be fetched")
     }
 
