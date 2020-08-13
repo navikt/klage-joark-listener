@@ -22,17 +22,10 @@ class JournalposthendelseKafkaConsumer(
     fun listen(journalpostRecord: ConsumerRecord<String, JournalfoeringHendelseRecord>) {
         logger.debug("Journalposthendelse received from Kafka topic: {}", journalpostRecord)
 
+        //TODO only fetch the ones we care about
         logger.debug("Fetching journalpost from SAF")
         val journalpostResponse = safClient.getJournalpost(journalpostRecord.value().journalpostId.toString())
         logger.debug("Journalpost fetched from SAF: {}", journalpostResponse)
-
-//        if (journalpostRecord.value().isToBeConsidered()) {
-//            logger.debug("Fetching journalpost from SAF")
-//            val journalpostResponse = safClient.getJournalpost(journalpostRecord.value().journalpostId.toString())
-//            logger.debug("Journalpost fetched from SAF: {}", journalpostResponse)
-//        } else {
-//            logger.debug("Journalposthendelse was not considered")
-//        }
 
         // TODO Send varsel
     }
