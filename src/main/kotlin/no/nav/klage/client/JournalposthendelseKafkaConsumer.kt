@@ -23,12 +23,10 @@ class JournalposthendelseKafkaConsumer(
         logger.debug("Journalposthendelse received from Kafka topic: {}", journalpostRecord)
 
         //TODO only fetch the ones we care about
-        logger.debug("Fetching journalpost from SAF")
-        val journalpostResponse = safClient.getJournalpost(journalpostRecord.value().journalpostId.toString())
-        logger.debug("Journalpost fetched from SAF: {}", journalpostResponse)
+//        logger.debug("Fetching journalpost from SAF")
+//        val journalpostResponse = safClient.getJournalpost(journalpostRecord.value().journalpostId.toString())
+//        logger.debug("Journalpost fetched from SAF: {}", journalpostResponse)
 
         // TODO Send varsel
     }
 }
-
-private fun JournalfoeringHendelseRecord.isToBeConsidered() = temaGammelt == "FOR" || temaNytt == "FOR"
