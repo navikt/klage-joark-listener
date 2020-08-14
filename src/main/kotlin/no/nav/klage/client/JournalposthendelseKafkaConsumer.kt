@@ -3,6 +3,7 @@ package no.nav.klage.client
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.klage.util.getLogger
 import no.nav.klage.varsel.VarselSender
+import no.nav.klage.varsel.varselFromJournalfoeringHendelse
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
@@ -42,7 +43,9 @@ class JournalposthendelseKafkaConsumer(
             consumerRecord.value().versjon,
             consumerRecord.value().kanalReferanseId
         )
-        // TODO Send varsel
+        varselSender.send(
+            consumerRecord.value().hendelsesId.toString(), varselFromJournalfoeringHendelse(consumerRecord.value())
+        )
     }
 
 }
