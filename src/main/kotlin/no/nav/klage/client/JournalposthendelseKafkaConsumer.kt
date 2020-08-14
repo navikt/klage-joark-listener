@@ -3,14 +3,14 @@ package no.nav.klage.client
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
 import no.nav.klage.util.getLogger
 import no.nav.klage.varsel.VarselSender
-import no.nav.klage.varsel.varselFromJournalfoeringHendelse
 import org.apache.kafka.clients.consumer.ConsumerRecord
 import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 
 @Component
 class JournalposthendelseKafkaConsumer(
-    private val varselSender: VarselSender
+    private val varselSender: VarselSender,
+    private val safClient: SafClient
 ) {
 
     companion object {
@@ -19,33 +19,14 @@ class JournalposthendelseKafkaConsumer(
     }
 
     @KafkaListener(topics = ["\${KAFKA_TOPIC}"])
-    fun listen(consumerRecord: ConsumerRecord<String, JournalfoeringHendelseRecord>) {
-        logger.debug("Journalposthendelse received from Kafka topic: {}", consumerRecord)
-        logger.debug("Value of event. " +
-                "\nmottaksKanal: {}" +
-                "\nbehandlingstema: {}" +
-                "\njournalpostId: {}" +
-                "\njournalpostStatus: {}" +
-                "\nhendelsesId: {}" +
-                "\nhendelsesType: {}" +
-                "\ntemaGammelt: {}" +
-                "\ntemaNytt: {}" +
-                "\nversjon: {}" +
-                "\nkanalReferanseId: {}",
-            consumerRecord.value().mottaksKanal,
-            consumerRecord.value().behandlingstema,
-            consumerRecord.value().journalpostId,
-            consumerRecord.value().journalpostStatus,
-            consumerRecord.value().hendelsesId,
-            consumerRecord.value().hendelsesType,
-            consumerRecord.value().temaGammelt,
-            consumerRecord.value().temaNytt,
-            consumerRecord.value().versjon,
-            consumerRecord.value().kanalReferanseId
-        )
-        varselSender.send(
-            consumerRecord.value().hendelsesId.toString(), varselFromJournalfoeringHendelse(consumerRecord.value())
-        )
-    }
+    fun listen(journalpostRecord: ConsumerRecord<String, JournalfoeringHendelseRecord>) {
+        logger.debug("Journalposthendelse received from Kafka topic: {}", journalpostRecord)
 
+        //TODO only fetch the ones we care about
+//        logger.debug("Fetching journalpost from SAF")
+//        val journalpostResponse = safClient.getJournalpost(journalpostRecord.value().journalpostId.toString())
+//        logger.debug("Journalpost fetched from SAF: {}", journalpostResponse)
+
+        // TODO Send varsel
+    }
 }
