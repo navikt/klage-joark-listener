@@ -34,6 +34,7 @@ dependencies {
     implementation("ch.qos.logback:logback-classic")
     implementation("net.logstash.logback:logstash-logback-encoder:$logstashVersion")
     implementation("com.fasterxml.jackson.module:jackson-module-kotlin")
+    implementation("com.fasterxml.jackson.dataformat:jackson-dataformat-xml")
 
     implementation("org.springframework.kafka:spring-kafka")
     implementation("io.confluent:kafka-avro-serializer:5.5.1")
