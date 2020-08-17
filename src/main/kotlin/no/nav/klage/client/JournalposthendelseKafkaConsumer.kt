@@ -52,7 +52,7 @@ class JournalposthendelseKafkaConsumer(
                         logger.error("Sending varsel for ${record.hendelsesId} failed.", it)
                     }.onSuccess {
                         logger.debug("Varsel sent for ${record.hendelsesId}")
-                        klageId?.let { addKlageidToCache(it) }
+                        klageId?.let { addKlageIdToCache(it) }
                         cleanCache()
                     }
                 }
@@ -73,7 +73,7 @@ class JournalposthendelseKafkaConsumer(
     private fun JournalfoeringHendelseRecord.hasBehandlingstemaKlage() =
         this.behandlingstema.toString() == behandlingstemaKlageUnderenhet
 
-    private fun addKlageidToCache(klageId: String) {
+    private fun addKlageIdToCache(klageId: String) {
         cache[klageId] = System.currentTimeMillis() + timeoutMs
     }
 
