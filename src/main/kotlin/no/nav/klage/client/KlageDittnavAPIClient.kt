@@ -22,7 +22,7 @@ class KlageDittnavAPIClient(
         klageDittnavAPIWebClient.post()
                 .uri("/journalpoststatus/$journalpostId")
                 .header(HttpHeaders.AUTHORIZATION, "Bearer ${azureADClient.oidcToken()}")
-                .bodyValue(journalpostId)
+                .bodyValue(journalpostStatus)
                 .retrieve()
                 .toBodilessEntity()
                 .block() ?: throw RuntimeException("Unable to send Journalpost status for klage in klage-dittnav-api.")
