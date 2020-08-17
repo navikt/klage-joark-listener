@@ -11,6 +11,7 @@ import org.springframework.kafka.annotation.KafkaListener
 import org.springframework.stereotype.Component
 
 private const val behandlingstemaKlageUnderenhet = "ab0019"
+private const val timeoutMs = 1000 * 60 * 60 * 24
 
 @Component
 class JournalposthendelseKafkaConsumer(
@@ -26,6 +27,8 @@ class JournalposthendelseKafkaConsumer(
     @Value("\${NAIS_CLUSTER_NAME}")
     private lateinit var cluster: String
 
+    private val cache = mutableMapOf<String, Long>()
+
     @KafkaListener(topics = ["\${KAFKA_TOPIC}"])
     fun listen(journalpostRecord: ConsumerRecord<String, JournalfoeringHendelseRecord>) {
         logger.debug("Journalposthendelse received from Kafka topic: {}", journalpostRecord)
@@ -35,7 +38,8 @@ class JournalposthendelseKafkaConsumer(
             val journalpostResponse = safClient.getJournalpost(record.journalpostId.toString())
 
             journalpostResponse.data?.journalpost?.run {
-                if (record.isMidlertidigJournalfoert() && canSendVarsel()) {
+                val klageId = getKlageId()
+                if (record.isMidlertidigJournalfoert() && canSendVarsel(klageId)) {
                     runCatching {
                         varselSender.send(
                             record.hendelsesId.toString(), varselFromJournalfoeringHendelse(
@@ -48,15 +52,19 @@ class JournalposthendelseKafkaConsumer(
                         logger.error("Sending varsel for ${record.hendelsesId} failed.", it)
                     }.onSuccess {
                         logger.debug("Varsel sent for ${record.hendelsesId}")
+                        klageId?.let { addKlageidToCache(it) }
+                        cleanCache()
                     }
                 }
             }
         }
     }
 
-    private fun Journalpost.canSendVarsel(): Boolean {
-        return this.tilleggsopplysninger.any { it.nokkel == "klage_id" } &&
-                cluster == "dev-fss" // TODO Only send varsel in dev until verified
+    private fun Journalpost.getKlageId(): String? =
+        this.tilleggsopplysninger.find { it.nokkel == "klage_id" }?.nokkel
+
+    private fun canSendVarsel(klageId: String?): Boolean {
+        return klageId != null && !cache.containsKey(klageId) && cluster == "dev-fss" // TODO Only send varsel in dev until verified
     }
 
     private fun JournalfoeringHendelseRecord.isMidlertidigJournalfoert() =
@@ -64,4 +72,13 @@ class JournalposthendelseKafkaConsumer(
 
     private fun JournalfoeringHendelseRecord.hasBehandlingstemaKlage() =
         this.behandlingstema.toString() == behandlingstemaKlageUnderenhet
+
+    private fun addKlageidToCache(klageId: String) {
+        cache[klageId] = System.currentTimeMillis() + timeoutMs
+    }
+
+    private fun cleanCache() {
+        cache.entries.removeIf { it.value < System.currentTimeMillis() }
+    }
+
 }
