@@ -1,6 +1,7 @@
 package no.nav.klage.client
 
 import no.nav.joarkjournalfoeringhendelser.JournalfoeringHendelseRecord
+import no.nav.klage.domain.saf.Journalpost
 import no.nav.klage.util.getLogger
 import no.nav.klage.varsel.VarselSender
 import no.nav.klage.varsel.varselFromJournalfoeringHendelse
@@ -30,28 +31,37 @@ class JournalposthendelseKafkaConsumer(
         logger.debug("Journalposthendelse received from Kafka topic: {}", journalpostRecord)
 
         val record = journalpostRecord.value()
-        if (record.sendVarsel()) {
+        if (record.hasBehandlingstemaKlage()) {
             val journalpostResponse = safClient.getJournalpost(record.journalpostId.toString())
+
             journalpostResponse.data?.journalpost?.run {
-                runCatching {
-                    varselSender.send(
-                        record.hendelsesId.toString(), varselFromJournalfoeringHendelse(
-                            aktoerId = bruker?.id ?: throw Exception("Aktoerid not present in record"),
-                            fornavn = avsenderMottakerNavn ?: throw Exception("User name not present in record"),
-                            journalfoeringsdato = datoOpprettet ?: throw Exception("Date not present in record")
+                if (record.isMidlertidigJournalfoert() && canSendVarsel()) {
+                    runCatching {
+                        varselSender.send(
+                            record.hendelsesId.toString(), varselFromJournalfoeringHendelse(
+                                aktoerId = bruker?.id ?: throw Exception("Aktoerid not present in record"),
+                                fornavn = avsenderMottakerNavn ?: throw Exception("User name not present in record"),
+                                journalfoeringsdato = datoOpprettet ?: throw Exception("Date not present in record")
+                            )
                         )
-                    )
-                }.onFailure {
-                    logger.error("Sending varsel for ${record.hendelsesId} failed.", it)
-                }.onSuccess {
-                    logger.debug("Varsel sent for ${record.hendelsesId}")
+                    }.onFailure {
+                        logger.error("Sending varsel for ${record.hendelsesId} failed.", it)
+                    }.onSuccess {
+                        logger.debug("Varsel sent for ${record.hendelsesId}")
+                    }
                 }
             }
         }
     }
 
-    private fun JournalfoeringHendelseRecord.sendVarsel(): Boolean =
-        this.behandlingstema.toString() == behandlingstemaKlageUnderenhet &&
-                this.journalpostStatus.toString() == "M" &&
-                cluster == "dev-fss" // TODO Onle send varsel in dev until verified
+    private fun Journalpost.canSendVarsel(): Boolean {
+        return this.tilleggsopplysninger.any { it.nokkel == "klage_id" } &&
+                cluster == "dev-fss" // TODO Only send varsel in dev until verified
+    }
+
+    private fun JournalfoeringHendelseRecord.isMidlertidigJournalfoert() =
+        this.journalpostStatus.toString() == "M"
+
+    private fun JournalfoeringHendelseRecord.hasBehandlingstemaKlage() =
+        this.behandlingstema.toString() == behandlingstemaKlageUnderenhet
 }
