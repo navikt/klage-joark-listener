@@ -39,6 +39,7 @@ class JournalposthendelseKafkaConsumer(
 
             journalpostResponse.data?.journalpost?.run {
                 val klageId = getKlageId()
+                logger.debug("Sjekk varsel {}, {}, {}", klageId, record.isMidlertidigJournalfoert(), canSendVarsel(klageId))
                 if (record.isMidlertidigJournalfoert() && canSendVarsel(klageId)) {
                     runCatching {
                         varselSender.send(
