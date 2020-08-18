@@ -3,6 +3,8 @@ import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 val logstashVersion = "5.1"
 val springSleuthVersion = "2.2.3.RELEASE"
 val mqVersion = "9.2.0.0"
+val jaxbVersion = "2.3.0"
+val activationVersion = "1.1.1"
 
 repositories {
     mavenCentral()
@@ -44,6 +46,11 @@ dependencies {
     implementation("javax.jms:javax.jms-api")
     implementation("org.springframework:spring-jms")
     implementation("com.ibm.mq:com.ibm.mq.allclient:$mqVersion")
+
+    implementation("javax.xml.bind:jaxb-api:$jaxbVersion")
+    implementation("com.sun.xml.bind:jaxb-core:$jaxbVersion")
+    implementation("com.sun.xml.bind:jaxb-impl:$jaxbVersion")
+    implementation("javax.activation:activation:$activationVersion")
 
     testImplementation("org.springframework.boot:spring-boot-starter-test") {
         exclude(group = "org.junit.vintage", module = "org.junit.vintage")
