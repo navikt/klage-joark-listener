@@ -43,11 +43,19 @@ class VarselConfiguration {
     private fun targetConnectionFactory() = MQQueueConnectionFactory().apply {
         hostName = uri.host
         port = uri.port
-        queueManager = uri.path
+        queueManager = uri.path.minusSlash()
         channel = channelName
         transportType = WMQ_CM_CLIENT
         ccsid = utf8WithPua
         setIntProperty(JMS_IBM_ENCODING, MQENC_NATIVE)
         setIntProperty(JMS_IBM_CHARACTER_SET, utf8WithPua)
     }
+
+    private fun String.minusSlash() =
+            if (this.startsWith("/")) {
+                this.substring(1)
+            } else {
+                this
+            }
+
 }
