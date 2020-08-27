@@ -65,6 +65,7 @@ class JournalposthendelseKafkaConsumer(
         this.tilleggsopplysninger.find { it.nokkel == "klage_id" }?.nokkel
 
     private fun canSendVarsel(klageId: String?): Boolean {
+        logger.debug("Cache: {}, {}", cache.size, cache.containsKey(klageId))
         return klageId != null && !cache.containsKey(klageId) && cluster == "dev-fss" // TODO Only send varsel in dev until verified
     }
 
