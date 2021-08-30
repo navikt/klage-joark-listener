@@ -18,14 +18,11 @@ class KlageDittnavAPIClientConfiguration(private val webClientBuilder: WebClient
     @Value("\${KLAGE-DITTNAV-API_SERVICE_URL}")
     private lateinit var klageDittnavAPIServiceURL: String
 
-    @Value("\${HTTPS_PROXY}")
-    private lateinit var proxyUrl: String
 
     @Bean
     fun klageDittnavAPIWebClient(): WebClient {
         return webClientBuilder
-                .clientConnector(getReactorClientHttpConnector(proxyUrl))
-                .baseUrl(klageDittnavAPIServiceURL)
+                .baseUrl(klageDittnavAPIServiceURL + "/internal/")
                 .build()
     }
 }
