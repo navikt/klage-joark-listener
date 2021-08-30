@@ -18,13 +18,9 @@ class AzureADClientConfiguration(
         private val logger = getLogger(javaClass.enclosingClass)
     }
 
-    @Value("\${HTTPS_PROXY}")
-    private lateinit var proxyUrl: String
-
     @Bean
     fun azureADWebClient(): WebClient {
         return webClientBuilder
-                .clientConnector(getReactorClientHttpConnector(proxyUrl))
                 .build()
     }
 }
