@@ -43,7 +43,6 @@ spec:
   webproxy: true
   accessPolicy:
     outbound:
-      rules:
       external:
       {{#each externalHosts as |host|}}
          - host: {{host}}
