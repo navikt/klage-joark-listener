@@ -4,8 +4,4 @@ SECURITY_TOKEN_SERVICE_REST_URL: https://api-gw-q1.oera.no/security-token-servic
 SERVICE_USER_USERNAME: srvklage-dittnav
 SAF_BASE_URL: https://api-gw-q1.oera.no/saf-api/graphql
 KAFKA_TOPIC: aapen-dok-journalfoering-v1-q1
-VARSEL_URI: mq://b27apvl176.preprod.local:1413/MQ1LSC02
-VARSEL_CHANNEL_NAME: Q1_KLAGE_VARSEL
-VARSEL_QUEUE_NAME: QA.Q1_VARSELPRODUKSJON.SEND_VARSEL
-VARSEL_USERNAME: srvappserver
 KLAGE_DITTNAV_API_CLIENT_ID: 9ba0e760-d28c-44d2-8cae-8a1dc9b4584f

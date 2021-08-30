@@ -6,11 +6,19 @@ val mqVersion = "9.2.0.0"
 val jaxbVersion = "2.3.0"
 val activationVersion = "1.1.1"
 
+val githubUser: String by project
+val githubPassword: String by project
+
 repositories {
     mavenCentral()
     jcenter()
+    maven ("http://packages.confluent.io/maven/")
     maven {
-        url = uri("http://packages.confluent.io/maven/")
+        url = uri("https://maven.pkg.github.com/navikt/simple-slack-poster")
+        credentials {
+            username = githubUser
+            password = githubPassword
+        }
     }
 }
 
@@ -42,6 +50,7 @@ dependencies {
     implementation("io.confluent:kafka-avro-serializer:5.5.1")
     implementation("org.apache.avro:avro:1.10.0")
 
+    implementation("no.nav.slackposter:simple-slack-poster:5")
 
     implementation("javax.jms:javax.jms-api")
     implementation("org.springframework:spring-jms")
@@ -74,6 +83,14 @@ tasks.getByName<org.springframework.boot.gradle.tasks.bundling.BootJar>("bootJar
 
 tasks.test {
     useJUnitPlatform()
+}
+
+tasks.register("printProps") {
+    doLast {
+        println(githubUser)
+        println(githubPassword)
+        println(System.getProperty("system"))
+    }
 }
 
 kotlin.sourceSets["main"].kotlin.srcDirs("src/main/kotlin")
