@@ -11,13 +11,14 @@ import org.springframework.web.reactive.function.client.bodyToMono
 
 @Component
 class AzureADClient(
-        private val azureADWebClient: WebClient
+    private val azureADWebClient: WebClient
 ) {
 
     companion object {
         @Suppress("JAVA_CLASS_ON_COMPANION")
         private val logger = getLogger(javaClass.enclosingClass)
         private var cachedOidcToken: OidcToken? = null
+        private var cachedKlageDittnavApiOidcToken: OidcToken? = null
         private var cachedOidcDiscovery: OidcDiscovery? = null
     }
 
@@ -30,17 +31,23 @@ class AzureADClient(
     @Value("\${AZURE_APP_WELL_KNOWN_URL}")
     private lateinit var discoveryUrl: String
 
-    @Value("\${KLAGE_DITTNAV_API_CLIENT_ID}")
-    private lateinit var klageDittnavApiClientId: String
+    @Value("\${KLAGE_DITTNAV_API_APP_NAME}")
+    private lateinit var klageDittnavApiAppName: String
+
+    @Value("\${NAIS_CLUSTER_NAME}")
+    lateinit var naisCluster: String
+
+    @Value("\${NAIS_NAMESPACE}")
+    lateinit var naisNamespace: String
 
     private fun oidcDiscovery(): OidcDiscovery {
         if (cachedOidcDiscovery == null) {
             logger.debug("getting info from oidcDiscovery")
             cachedOidcDiscovery = azureADWebClient.get()
-                    .uri(discoveryUrl)
-                    .retrieve()
-                    .bodyToMono<OidcDiscovery>()
-                    .block()
+                .uri(discoveryUrl)
+                .retrieve()
+                .bodyToMono<OidcDiscovery>()
+                .block()
 
             logger.debug("Retrieved endpoint: " + cachedOidcDiscovery!!.token_endpoint)
         }
@@ -48,29 +55,41 @@ class AzureADClient(
         return cachedOidcDiscovery!!
     }
 
-    fun oidcToken(): String {
-        if (cachedOidcToken.shouldBeRenewed()) {
-            val map = LinkedMultiValueMap<String, String>()
-
-            map.add("client_id", clientId)
-            map.add("client_secret", clientSecret)
-            map.add("grant_type", "client_credentials")
-            map.add("scope", "api://${klageDittnavApiClientId}/.default")
-
-            logger.debug("Getting access token from OIDC")
-
-            cachedOidcToken = azureADWebClient.post()
-                    .uri(oidcDiscovery().token_endpoint)
-                    .bodyValue(map)
-                    .retrieve()
-                    .bodyToMono<OidcToken>()
-                    .block()
+    fun klageDittnavApiOidcToken(): String {
+        if (cachedKlageDittnavApiOidcToken.shouldBeRenewed()) {
+            cachedKlageDittnavApiOidcToken = returnUpdatedToken(getKlageDittnavApiScope())
         }
 
-        return cachedOidcToken!!.token
+        return cachedKlageDittnavApiOidcToken!!.token
+    }
+
+    fun returnUpdatedToken(scope: String): OidcToken {
+
+        val map = LinkedMultiValueMap<String, String>()
+
+        map.add("client_id", clientId)
+        map.add("client_secret", clientSecret)
+        map.add("grant_type", "client_credentials")
+        map.add("scope", "api://${scope}/.default")
+
+        logger.debug("Getting access token from OIDC")
+
+        return azureADWebClient.post()
+            .uri(oidcDiscovery().token_endpoint)
+            .bodyValue(map)
+            .retrieve()
+            .bodyToMono<OidcToken>()
+            .block()
+
+
     }
 
     private fun OidcToken?.shouldBeRenewed(): Boolean = this?.hasExpired() ?: true
+
+    private fun getKlageDittnavApiScope(): String = getScopeString(klageDittnavApiAppName)
+
+    private fun getScopeString(appName: String): String = "${naisCluster}.${naisNamespace}.${appName}"
+
 
     @JsonIgnoreProperties(ignoreUnknown = true)
     data class OidcDiscovery(val token_endpoint: String, val jwks_uri: String, val issuer: String)

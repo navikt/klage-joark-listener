@@ -4,4 +4,3 @@ SECURITY_TOKEN_SERVICE_REST_URL: https://api-gw-q1.oera.no/security-token-servic
 SERVICE_USER_USERNAME: srvklage-dittnav
 SAF_BASE_URL: https://api-gw-q1.oera.no/saf-api/graphql
 KAFKA_TOPIC: aapen-dok-journalfoering-v1-q1
-KLAGE_DITTNAV_API_CLIENT_ID: 9ba0e760-d28c-44d2-8cae-8a1dc9b4584f

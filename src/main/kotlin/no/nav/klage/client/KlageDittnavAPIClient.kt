@@ -21,7 +21,7 @@ class KlageDittnavAPIClient(
         logger.debug("Sending Journalpost status to klage-dittnav-api. JournalpostId: {}", journalpostId)
         klageDittnavAPIWebClient.post()
                 .uri("/journalpoststatus/$journalpostId")
-                .header(HttpHeaders.AUTHORIZATION, "Bearer ${azureADClient.oidcToken()}")
+                .header(HttpHeaders.AUTHORIZATION, "Bearer ${azureADClient.klageDittnavApiOidcToken()}")
                 .bodyValue(journalpostStatus)
                 .retrieve()
                 .toBodilessEntity()
